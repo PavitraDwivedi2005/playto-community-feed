@@ -9,7 +9,6 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # ========================
 # SECURITY
 # ========================
@@ -24,7 +23,6 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 # Allows Railway and local development
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", ".up.railway.app,localhost,127.0.0.1").split(",")
 
-
 # ========================
 # APPLICATIONS
 # ========================
@@ -35,7 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",  # Static files for production
+    "whitenoise.runserver_nostatic",  
     "django.contrib.staticfiles",
 
     # Third-party
@@ -45,7 +43,6 @@ INSTALLED_APPS = [
     # Local
     "core",
 ]
-
 
 # ========================
 # MIDDLEWARE
@@ -62,7 +59,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 # ========================
 # URLS / WSGI
@@ -87,7 +83,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
 # ========================
 # DATABASE (POSTGRES ONLY)
 # ========================
@@ -105,7 +100,6 @@ DATABASES = {
     )
 }
 
-
 # ========================
 # PASSWORD VALIDATION
 # ========================
@@ -117,7 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
 # ========================
 # I18N
 # ========================
@@ -127,7 +120,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-
 # ========================
 # STATIC FILES (WHITENOISE)
 # ========================
@@ -135,13 +127,12 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Tell WhiteNoise to compress and cache files
+# Using CompressedStaticFilesStorage to avoid 500 errors if a manifest is missing
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
-
 
 # ========================
 # DJANGO REST FRAMEWORK
@@ -156,20 +147,17 @@ REST_FRAMEWORK = {
     ],
 }
 
-
 # ========================
 # CORS & CSRF
 # ========================
 
-CORS_ALLOW_ALL_ORIGINS = True  # Allows your Vercel frontend to connect
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-# FIX FOR THE 403 ERROR: Tells Django to trust your Railway domain
 CSRF_TRUSTED_ORIGINS = [
     "https://playto-community-feed-production-b6c6.up.railway.app",
     "https://*.up.railway.app"
 ]
-
 
 # ========================
 # FIX FOR PRIMARY KEY WARNINGS (W042)
