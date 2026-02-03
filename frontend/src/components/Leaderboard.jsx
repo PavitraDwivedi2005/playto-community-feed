@@ -1,11 +1,13 @@
 import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const Leaderboard = forwardRef((props, ref) => {
   const [leaders, setLeaders] = useState([]);
 
   const fetchLeaders = () => {
-   fetch(${API_BASE_URL}/api/leaderboard/)
+    // FIXED: Added backticks around the URL string
+    fetch(`${API_BASE_URL}/api/leaderboard/`)
       .then((res) => res.json())
       .then(setLeaders)
       .catch(() => setLeaders([]));
@@ -16,10 +18,10 @@ const Leaderboard = forwardRef((props, ref) => {
   }));
 
   useEffect(() => {
-    fetchLeaders(); // Initial fetch
-    const interval = setInterval(fetchLeaders, 5000); // Poll every 5 seconds
+    fetchLeaders(); 
+    const interval = setInterval(fetchLeaders, 5000); 
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval); 
   }, []);
 
   return (
