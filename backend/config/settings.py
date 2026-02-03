@@ -9,6 +9,7 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # ========================
 # SECURITY
 # ========================
@@ -20,8 +21,8 @@ if not SECRET_KEY:
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-# In production, specify your Railway domain and Vercel domain here
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+# Allows Railway and local development
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", ".up.railway.app,localhost,127.0.0.1").split(",")
 
 
 # ========================
@@ -34,7 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",  # For static files
+    "whitenoise.runserver_nostatic",  # Static files for production
     "django.contrib.staticfiles",
 
     # Third-party
@@ -141,6 +142,7 @@ STORAGES = {
     },
 }
 
+
 # ========================
 # DJANGO REST FRAMEWORK
 # ========================
@@ -159,22 +161,18 @@ REST_FRAMEWORK = {
 # CORS & CSRF
 # ========================
 
-# Link your Vercel URL here
-CORS_ALLOWED_ORIGINS = [
-    "https://your-frontend-domain.vercel.app",  # Add your actual Vercel URL
-    "http://localhost:3000",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://your-frontend-domain.vercel.app",
-    "https://playto-community-feed-production.up.railway.app", # Add your Railway URL
-]
-
+CORS_ALLOW_ALL_ORIGINS = True  # Allows your Vercel frontend to connect
 CORS_ALLOW_CREDENTIALS = True
+
+# FIX FOR THE 403 ERROR: Tells Django to trust your Railway domain
+CSRF_TRUSTED_ORIGINS = [
+    "https://playto-community-feed-production-b6c6.up.railway.app",
+    "https://*.up.railway.app"
+]
 
 
 # ========================
-# FIX FOR PRIMARY KEY WARNINGS
+# FIX FOR PRIMARY KEY WARNINGS (W042)
 # ========================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
