@@ -9,7 +9,6 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # ========================
 # SECURITY
 # ========================
@@ -21,13 +20,8 @@ if not SECRET_KEY:
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.environ.get(
-    "ALLOWED_HOSTS",
-    ""
-).split(",")
-
-if not ALLOWED_HOSTS or ALLOWED_HOSTS == [""]:
-    raise RuntimeError("ALLOWED_HOSTS is not set")
+# In production, specify your Railway domain and Vercel domain here
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 
 # ========================
@@ -40,6 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise.runserver_nostatic",  # For static files
     "django.contrib.staticfiles",
 
     # Third-party
@@ -56,8 +51,9 @@ INSTALLED_APPS = [
 # ========================
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # Must be at the very top
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Must be after SecurityMiddleware
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -132,12 +128,18 @@ USE_TZ = True
 
 
 # ========================
-# STATIC FILES
+# STATIC FILES (WHITENOISE)
 # ========================
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Tell WhiteNoise to compress and cache files
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # ========================
 # DJANGO REST FRAMEWORK
@@ -154,8 +156,25 @@ REST_FRAMEWORK = {
 
 
 # ========================
-# CORS
+# CORS & CSRF
 # ========================
 
-CORS_ALLOW_ALL_ORIGINS = True
+# Link your Vercel URL here
+CORS_ALLOWED_ORIGINS = [
+    "https://your-frontend-domain.vercel.app",  # Add your actual Vercel URL
+    "http://localhost:3000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://your-frontend-domain.vercel.app",
+    "https://playto-community-feed-production.up.railway.app", # Add your Railway URL
+]
+
 CORS_ALLOW_CREDENTIALS = True
+
+
+# ========================
+# FIX FOR PRIMARY KEY WARNINGS
+# ========================
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
