@@ -105,5 +105,9 @@ The frontend will be running at http://localhost:5173
 ## Technologies Used
 
 - Backend: Django, Django REST Framework
-- Frontend: React, Tailwind CSS
+- Frontend: React, Tailwind CSS 
 - Database: SQLite (for development)
+
+* **Live Frontend:** [View App](https://playto-community-feed-m5q3fwyuu-pavitra-dwivedis-projects.vercel.app/)
+* **Backend API:** [API Root](https://railway.com/invite/KalkLBT6yBV)
+
