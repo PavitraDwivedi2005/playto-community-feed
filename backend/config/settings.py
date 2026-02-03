@@ -19,9 +19,7 @@ ALLOWED_HOSTS = os.environ.get(
 
 
 
-# Railway safety fallback
-if not ALLOWED_HOSTS or ALLOWED_HOSTS == [""]:
-    ALLOWED_HOSTS = ["*"]
+
 
 
 # Application definition
