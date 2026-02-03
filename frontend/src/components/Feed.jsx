@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+// This line allows the app to use the Vercel variable or fallback to local for dev
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
 export default function Feed({ onLike }) {
   const [posts, setPosts] = useState([]);
   const [newPostContent, setNewPostContent] = useState("");
@@ -10,7 +13,8 @@ export default function Feed({ onLike }) {
   const [likedPosts, setLikedPosts] = useState(new Set());
 
   const fetchPosts = () => {
-    fetch("http://127.0.0.1:8000/api/posts/", {
+    // UPDATED: URL now uses the dynamic base
+    fetch(`${API_BASE_URL}/api/posts/`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -96,7 +100,8 @@ function Comment({ comment, level, onReply, onLike, postId, replyForms, setReply
 }
 
   function handleLike(postId) {
-    fetch(`http://127.0.0.1:8000/api/posts/${postId}/like/`, {
+    // UPDATED URL
+    fetch(`${API_BASE_URL}/api/posts/${postId}/like/`, {
       method: "POST",
       credentials: "include",
     })
@@ -127,7 +132,8 @@ function Comment({ comment, level, onReply, onLike, postId, replyForms, setReply
 
   const handleCreatePost = (e) => {
     e.preventDefault();
-    fetch("http://127.0.0.1:8000/api/posts/", {
+    // UPDATED URL
+    fetch(`${API_BASE_URL}/api/posts/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -148,7 +154,8 @@ function Comment({ comment, level, onReply, onLike, postId, replyForms, setReply
       setComments((prev) => ({ ...prev, [postId]: null }));
       return;
     }
-    fetch(`http://127.0.0.1:8000/api/posts/${postId}/`, {
+    // UPDATED URL
+    fetch(`${API_BASE_URL}/api/posts/${postId}/`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -159,7 +166,8 @@ function Comment({ comment, level, onReply, onLike, postId, replyForms, setReply
   };
 
   const handleCreateComment = (postId, content) => {
-    fetch("http://127.0.0.1:8000/api/comments/", {
+    // UPDATED URL
+    fetch(`${API_BASE_URL}/api/comments/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -179,7 +187,8 @@ function Comment({ comment, level, onReply, onLike, postId, replyForms, setReply
   };
 
   const handleReply = (commentId, content, postId) => {
-    fetch("http://127.0.0.1:8000/api/comments/", {
+    // UPDATED URL
+    fetch(`${API_BASE_URL}/api/comments/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -212,7 +221,8 @@ function Comment({ comment, level, onReply, onLike, postId, replyForms, setReply
   };
 
   const handleLikeComment = (commentId, postId) => {
-    fetch(`http://127.0.0.1:8000/api/comments/${commentId}/like/`, {
+    // UPDATED URL
+    fetch(`${API_BASE_URL}/api/comments/${commentId}/like/`, {
       method: "POST",
       credentials: "include",
     })
@@ -301,25 +311,6 @@ function Comment({ comment, level, onReply, onLike, postId, replyForms, setReply
                 Comment
               </button>
             </form>
-          )}
-
-          {comments[post.id] && (
-            <div className="mt-6 space-y-3">
-              {comments[post.id].map((comment) => (
-                <Comment
-                  key={comment.id}
-                  comment={comment}
-                  level={0}
-                  onReply={handleReply}
-                  onLike={handleLikeComment}
-                  postId={post.id}
-                  replyForms={replyForms}
-                  setReplyForms={setReplyForms}
-                  replyContent={replyContent}
-                  setReplyContent={setReplyContent}
-                />
-              ))}
-            </div>
           )}
 
           {comments[post.id] && (
