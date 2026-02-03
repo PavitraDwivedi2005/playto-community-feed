@@ -1,12 +1,11 @@
 import { useEffect, useState, forwardRef, useImperativeHandle } from "react";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const Leaderboard = forwardRef((props, ref) => {
   const [leaders, setLeaders] = useState([]);
 
   const fetchLeaders = () => {
-    fetch("http://127.0.0.1:8000/api/leaderboard/", {
-      credentials: "include",
-    })
+   fetch(${API_BASE_URL}/api/leaderboard/)
       .then((res) => res.json())
       .then(setLeaders)
       .catch(() => setLeaders([]));
